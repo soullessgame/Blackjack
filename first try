@@ -1,0 +1,74 @@
+from art import logo
+import random
+print(logo)
+
+cards=[11,2,4,5,6,7,8,9,10,10,10,10]
+
+if input(f'do you want to play blackjack? type "y" or "n"\n' ) == 'y':
+  print(f'let\'s play blackjack')
+
+def initial_cards(cards):
+  cards_npc= random.choices(cards, k=2)
+  sum_npc= sum(cards_npc)
+  cards_user=random.choices(cards, k=2)
+  sum_user= sum(cards_user)
+  print(f'your cards are {cards_user}, current score: {sum_user}')
+  print(f'the computer\'s first card is {cards_npc[0]}')
+  return cards_user, cards_npc
+
+cards_user, cards_npc = initial_cards(cards)
+
+def adding_cards_user(cards_user):
+  if sum(cards_user) == 21:
+    return cards_user
+  another_card=True
+  while another_card:
+    if input(f'do you want another card? type "y" or "n"\n') == 'y':
+      cards_user.append(random.choice(cards))
+  
+      if sum(cards_user)>21:
+        for i in range(len(cards_user)):
+          if cards_user[i]== 11:
+            cards_user[i]=1
+        
+      if sum(cards_user)>21:
+        # print(f'User\'s final hand: {cards_user}, final score: {sum(cards_user)}')
+        return cards_user
+        another_card=False 
+    else:
+      # print(f'User\'s final hand: {cards_user}, final score: {sum(cards_user)}')
+      return cards_user
+      another_card=False 
+  
+ending_score_user=adding_cards_user(cards_user)
+
+def adding_cards_dealer(cards_npc):
+  if sum(cards_npc) == 21:
+    return cards_npc
+  else:
+    while sum(cards_npc) < 17:
+      cards_npc.append(random.choice(cards))
+      for i in range(len(cards_user)):
+        if cards_user[i]== 11:
+          cards_user[i]=1
+      if sum(cards_npc)>=17:
+        return cards_npc
+        break
+    # print(f'Computer\'s final hand: {cards_npc}, final score: {sum(cards_npc)}')
+
+ending_score_npc=adding_cards_dealer(cards_npc)
+
+def who_won(ending_score_user, ending_score_npc):
+  if len(ending_score_npc) ==2 and sum(ending_score_npc) == 21:
+    print(f'User\'s final hand: {cards_user}, final score: {sum(cards_user)}')
+    print(f'Computer\'s final hand: {cards_npc}, final score: {sum(cards_npc)}')
+    print(f'Computer has blackjack!')
+  elif sum(ending_score_user)> 21:
+    print(f'User\'s final hand: {cards_user}, final score: {sum(cards_user)}')
+    print(f'You went over, you lose')
+  elif sum(ending_score_npc)> 21:
+    print(f'User\'s final hand: {cards_user}, final score: {sum(cards_user)}')
+    print(f'Computer\'s final hand: {cards_npc}, final score: {sum(cards_npc)}')
+    print(f'Opponent went over. You win')
+    
+who_won(ending_score_user, ending_score_npc) 
